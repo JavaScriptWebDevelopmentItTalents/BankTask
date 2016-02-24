@@ -58,20 +58,20 @@ var bank = (function iife() {
     }
 
     Bank.prototype.takeDeposit = function takeDeposit(deposit) {
-        var currentMoney = bank.getMoney();
-        bank.setMoney(currentMoney + deposit.getMoney());
-        bank.setReserv(currentMoney + deposit.getMoney() * 9 / 10);
-        bank.addDeposit(deposit);
+        var currentMoney = this.getMoney();
+        this.setMoney(currentMoney + deposit.getMoney());
+        this.setReserv(currentMoney + deposit.getMoney() * 9 / 10);
+        this.addDeposit(deposit);
         console.log('Deposit added!');
     };
     Bank.prototype.payTaxes = function payTaxes() {
-        var currentMoney = bank.getMoney();
-        for (var i = 0; i < bank.getDeposits().length; i++) {
-            bank.getDeposits()[i].setMoney(
-                bank.getDeposits()[i].getMoney() +
-                (bank.getDeposits()[i].getMoney() * bank.getDeposits()[i].getYTP() / 100)
+        var currentMoney = this.getMoney();
+        for (var i = 0; i < this.getDeposits().length; i++) {
+            this.getDeposits()[i].setMoney(
+                this.getDeposits()[i].getMoney() +
+                (this.getDeposits()[i].getMoney() * this.getDeposits()[i].getYTP() / 100)
             );
-            bank.setMoney(currentMoney - (bank.getDeposits()[i].getMoney() * bank.getDeposits()[i].getYTP() / 100));
+            this.setMoney(currentMoney - (this.getDeposits()[i].getMoney() * this.getDeposits()[i].getYTP() / 100));
         }
     };
     Bank.prototype.giveCredit = function giveCredit(credit) {
@@ -79,9 +79,10 @@ var bank = (function iife() {
     };
 
     return {
-        takeDeposit: bank.takeDeposit,
-        payTaxes: bank.payTaxes,
-        giveCredit: bank.giveCredit,
-        money: bank.getMoney
+        takeDeposit: bank.takeDeposit.bind(bank),
+        payTaxes: bank.payTaxes.bind(bank),
+        giveCredit: bank.giveCredit.bind(bank),
+        showMoney: bank.getMoney,
+        showReserve: bank.getReserv
     };
 }());
